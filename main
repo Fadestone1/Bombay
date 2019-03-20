@@ -94,3 +94,15 @@ int main() {
             }
             return 1;
             }
+    void inittabverif() { //programme pour initialiser le tableau de verification
+    for(int i=0;i<9;i++){
+        tabverif[i] =0;
+    }
+    }
+
+    void inittabballot() { //programme pour initialiser le tableau des ballots
+    for(int i=0;i<17;i++){
+        tabballot[i] = ' ' ;
+    }
+    }
+
