@@ -9,19 +9,23 @@ void colonne1();
 void colonne2();
 void colonne3();
 void colonne4();
+char vente1[12];
+char vente2[8];
+char vente3[4];
 void remplitabballot();
 int tirage();
-int isvalid(int F, int* tabverif);
+int isvalid(int F);
 void inittabverif();
 void inittabballot();
 
 
 int main() {
+    srand(time(NULL));//permet d'initier la fonction random
     inittabverif();
     for (int i=0;i<9;i++){
         tirage();
     }
-
+    triage();
 
 
 
@@ -79,21 +83,23 @@ int main() {
     nbtirage ++;
         do {
             aleatoire = rand()%17;
-        }while(!isvalid(aleatoire, tabverif));
+        }while(!isvalid(aleatoire));
         tabverif[nbtirage] = aleatoire;
-    printf("%d\n", aleatoire);
+    printf("%d\n", tabverif[nbtirage]);
     return(aleatoire);
     }
 
-    int isvalid(int F, int* tabverif){ // programme qui vérifie si le nombre aléatoire n'est pas déjà sorti
+    int isvalid(int F){ // programme qui vérifie si le nombre aléatoire n'est pas déjà sorti
         int i;
         int o =0;
-        for(i=0;i<17;i++){
+        for(i=0;i<8;i++){
             if (tabverif[i]== F){
                 return 0;
             }
             return 1;
             }
+    }
+
     void inittabverif() { //programme pour initialiser le tableau de verification
     for(int i=0;i<9;i++){
         tabverif[i] =0;
@@ -105,4 +111,63 @@ int main() {
         tabballot[i] = ' ' ;
     }
     }
+
+    void triage (){
+        int nbj =0;
+        int nbb =0;
+        int nbv =0;
+        int nbo =0;
+        for(int i =0;i<8;i++){
+            if(tabverif[i]<3){
+                nbj ++;
+            }
+            else {
+                if(tabverif[i]>=3 && tabverif[i]<7){
+                    nbv++;
+                }
+                else {
+                    if(tabverif[i]>=7 && tabverif<12){
+                        nbb++;
+                    }
+                    else {
+                        nbo++;
+                    }
+                }
+            }
+        }
+        int tabtri[4] = {nbj,nbb,nbo,nbv};
+        char tabtricoul[4] = {'jaune','bleu','oange','violet'};
+        for(int j=0;j<4;j++){
+            printf("\n%d",tabtri[j]);
+        }
+        tri_a_bulle(tabtri,tabtricoul);
+        for(int j=0;j<4;j++){
+            printf("\n%d",tabtri[j]);
+        }
+
+    }
+
+void tri_a_bulle(int*t, int *t2){
+    int j =0;
+    int tmp =0;
+    char trans;
+    int en_desordre =1;
+    while (en_desordre == 1){
+        en_desordre = 0;
+        for (j =0; j < 3; j++){
+            if(t[j] > t[j+1]){
+                tmp = t[j+1];
+                trans = t2[j+1];
+                t[j+1] = t[j];
+                t2[j+1] = t2[j];
+                t[j] = tmp;
+                t2[j] = trans;
+                en_desordre = 1;
+            }
+        }
+    }
+}
+
+
+
 
