@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+//void typestructure ();
+void tirage1();
+void affectation ();
+char tabcol1 [3] = {'jaune','orange','bleu'};
+struct ville {
+        char tabcol [3];
+        char piece [1];
+        int nb
+    };
+typedef struct ville s_ville;
+    s_ville ville1;
+    s_ville ville2;
+    s_ville ville3;
+    s_ville ville4;
+
+
+
+int main(){
+
+    //typestructure();
+
+    srand(time(NULL));
+    tirage1();
+
+    affectation();
+    return 0;
+}
+
+/*void typestructure() {
+    struct ville {
+        char tabcol [3];
+        char piece [1];
+    };
+    typedef struct ville s_ville;
+    s_ville ville1;
+    s_ville ville2;
+    s_ville ville3;
+    s_ville ville4;
+    }
+*/
+
+void tirage1(){
+    int nb1=0, nb2=0, nb3=0, nb4=0;
+
+    while (nb1==nb2 || nb1==nb3 || nb1==nb4 || nb2==nb3 || nb2==nb4 || nb3==nb4){
+    nb1=rand()%4+1; //affectation nombre entre 1 et 4 à la variable
+    nb2=rand()%4+1;
+    nb3=rand()%4+1;
+    nb4=rand()%4+1;
+    }
+    printf("%d\n%d\n%d\n%d\n",nb1,nb2,nb3,nb4); //verification visuelle
+    }
+
+void affectation(){
+    char i[3];
+    scanf("%c",&i[0]);
+    printf("%c",i[0]);
+    strcpy(ville1.tabcol[0], i[0]);
+    printf("bite");
+    printf("demande ville 1 %c ",ville1.tabcol[0]);
+
+    int a=8;
+    ville1.nb=a;
+    printf("%d",ville1.nb);
+    }
