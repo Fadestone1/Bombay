@@ -168,6 +168,98 @@ void tri_a_bulle(int*t, int *t2){
     }
 }
 
+void range_commerce (int*t,char*tt){
+    //couleur la plus présente
+    if (t[0] == t[1]){
+        for (int i =0;i<t[0];i++){
+            vente1[i] = tt[0];
+            vente1[i+t[0]] = tt[1];
+        }
+    }
+
+    else {
+        for (int j =0;j<t[0];j++){
+            vente1[j] = tt[0];
+        }
+    }
+    //2eme couleur la plus présente
+    if (t[1] == t[2]){
+        for (int k =0;k<t[1];k++){
+            vente2[k] = tt[1];
+            vente2[k+t[1]] = tt[2];
+        }
+    }
+
+    else {
+        if (t[1] == t[2] == t[3]){
+            for (int l =0;l<t[1];l++){
+                vente2[l] = tt[1];
+                vente2[l+t[1]] = tt[2];
+                vente2[l+t[1]+t[1]] = tt[3];
+            }
+        }
+        else {
+            for (int m =0;m<t[1];m++){
+                vente2[m] = tt[1];
+            }
+        }
+    }
+    //3eme couleur laplus présente
+    if (t[2] == t[3]){
+        for (int n =0;n<t[2];n++){
+            vente3[n] = tt[2];
+            vente3[n+t[2]] = tt[3];
+        }
+    }
+    else {
+         for (int o =0;o<t[2];o++){
+            vente3[o] = tt[3];
+         }
+    }
+}
+
+void tribullealeat(char *t, char *t2){
+    int j;
+    char tmp;
+    char trans;
+        for (int n =0; n < 3; n++){
+            j = n + rand()%(8-n);
+            tmp = t[n];
+            trans = t2[n];
+            t[n] = t[j];
+            t2[n] = t2[j];
+            t[j] = tmp;
+            t2[j] = trans;
+        }
+    }
+/*
+void mep_jet_compt_et_pal{
+    tabaff[1] = tabcompt[0];
+}
+
+
+void achat_ville (int ville){
+    if (ville == 1){
+        printf("quel ballot souhaitez vous vendre ?\n");
+        for(int i = 1;i<4;i++){
+            printf("%d. %c",i,demvi1[i-1]);
+        }
+        int vente;
+        scanf("%d",vente);
+        atilleballot(demvi1[vente-1]);
+    }
+}
+
+
+void atilleballot (char* ve,){
+    if (ve ==  )
+}
+
+void demvil (){
+
+}
+
+*/
 
 
 
