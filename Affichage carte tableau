@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <stlib.h>
+#include <string.h>
+#define DIMLIG 20
+#define DIMCOL 15
+
+
+char carte[DIMLIG][DIMCOL];
+
+char carte[DIMLIG][DIMCOL]={
+{'                ',' ',' ','struct palais1','  ','  ',' ',' ',' ',' ','struct palais2',' ',' ',' ','struct palais3'};
+{'                ',' ','/','              ','\\','  ',' ',' ',' ',' ','      |       ',' ',' ',' ','      |       '};
+{'                ','/',' ','              ','  ','\\',' ',' ',' ',' ','      |       ',' ',' ',' ','      |       '};
+{'struct comptoir1','
+{'|
+{'
