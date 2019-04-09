@@ -3,6 +3,8 @@
 #include <string.h>
 #include <math.h>
 
+void demandevilles ();
+
 int main ()
 {
 printf ("\n     +----------------------------------------------------------------carte de jeu------------------------------------------------------------------+");
@@ -59,5 +61,14 @@ printf ("\n     |                                                               
 printf ("\n     |                                                                                                                                              |");
 printf ("\n     +--------------------------------------------------------------------Bombay--------------------------------------------------------------------+");
 printf ("\n\n\n\n");
+demandevilles ();
+printf ("%d", tabdemandes[3][4]);
+return 0;
 }
 
+void demandevilles ()
+{
+  int tabdemandes[3][4] = {{2,3,0};{0,2,1}:{3,1,2};{1,0,3}};
+  return tabdemandes;
+}
+  
