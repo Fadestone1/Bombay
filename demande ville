@@ -12,7 +12,7 @@ int main(){
 
     printf("\n 0-> bleu\n 1-> violet \n 2-> jaune \n 3-> orange");
     printf("\n\n\n Demande generale");
-    for (int i=0;i<4;i++){
+    for (int i=0;i<4;i++){ //juste vérif donc inutile
             printf("\n\n Demande ville %d",i+1);
         for (int j=0;j<3;j++){
             printf("\n %d ", demville[j][i]);}
