@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+void tirage1();
+void affectation (int nb1, int nb2, int nb3, int nb4);
+int sto [3][1];
+int demville [3][4]={{2,0,3,1},{3,2,1,0},{0,1,2,3}};
+
+
+int main(){
+
+    printf("\n 0-> bleu\n 1-> violet \n 2-> jaune \n 3-> orange");
+    printf("\n\n\n Demande generale");
+    for (int i=0;i<4;i++){
+            printf("\n\n Demande ville %d",i+1);
+        for (int j=0;j<3;j++){
+            printf("\n %d ", demville[j][i]);}
+    }
+
+    srand(time(NULL));
+    tirage1();
+
+    return 0;
+}
+
+void tirage1(){
+
+    int nb1=0, nb2=0, nb3=0, nb4=0;
+
+    while (nb1==nb2 || nb1==nb3 || nb1==nb4 || nb2==nb3 || nb2==nb4 || nb3==nb4){
+    nb1=rand()%4+1; //affectation nombre entre 1 et 4 à la variable
+    nb2=rand()%4+1;
+    nb3=rand()%4+1;
+    nb4=rand()%4+1;
+    }
+    printf("\n\n\n nb aleatoire : %d %d %d %d \n\n\n",nb1,nb2,nb3,nb4); //verification visuelle
+    affectation(nb1, nb2, nb3, nb4); //SP pour affecter colonne couleur balo aux 4 villes de facon aléatoire
+    }
+
+void affectation (int nb1, int nb2, int nb3, int nb4){
+
+    for (int i=0; i<3 ;i++){
+            sto[i][0]=demville[i][nb1-1];
+    }
+            for (int i=0;i<3;i++){
+                demville[i][nb1-1]=demville[i][nb2-1];
+                demville[i][nb2-1]=demville[i][nb3-1];
+                demville[i][nb3-1]=demville[i][nb4-1];
+            }
+    for (int i=0; i<3 ;i++){
+            demville[i][nb4-1]=sto[i][0];
+
+    }
+    for (int i=0;i<4;i++){
+        printf("\n Demande ville %d",i+1);
+            for (int j=0;j<3;j++){
+            printf("\n %d ", demville[j][i]);
+            }
+    }
+}
