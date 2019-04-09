@@ -2,21 +2,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-char tabballot [17];
+
+int tabballot [17];
 int tabverif [9];
 int nbtirage;
-void colonne1();
-void colonne2();
-void colonne3();
-void colonne4();
-char vente1[12];
-char vente2[8];
-char vente3[4];
+void initville ();
+int vente [12][3];
+int demville[3][4];
 void remplitabballot();
 int tirage();
 int isvalid(int F);
 void inittabverif();
 void inittabballot();
+int tabdest [24][8];
+int tabcompt[8] = {0,0,2,2,3,3,1,1};
+int tabpalais[8] = {4,4,5,5,6,6,7,7};
+void tribullealeat(int *t,int* t2);
+
+
 
 
 int main() {
@@ -25,56 +28,62 @@ int main() {
     for (int i=0;i<9;i++){
         tirage();
     }
+
     triage();
-
-
-
+    printf("\n------------------------");
+    tribullealeat(tabcompt, tabpalais);
+    for (int j =0;j<8;j++){
+        printf("\n%d",tabcompt[j]);
+    }
 }
 
-    void colonne1 (){
-        char tabcol1 [3] = {'jaune','orange','bleu'};
-    }
 
-    void colonne2 (){
-        char tabcol2 [3] = {'bleu','jaune','violet'};
-    }
 
-    void colonne3 (){
-        char tabcol3 [3] = {'orange','violet','bleu'};
-    }
 
-    void colonne4 (){
-        char tabcol4 [3] = {'violet','bleu','orange'};
-    }
-
-    typedef struct joueur {
+struct joueur {
+        char nom;
+        int nbcation;
         int roupie;
         int palais;
         int jetville;
         int jetcomptoir;
         int jetclient;
-        char ballot [2];
-    } joueur;
+        int ballot [2];
+
+    };
+typedef struct joueur S_jou;
+
+struct casej {
+    int ville;
+    int palais;
+    char jetons [2];
+    char joueur;
+
+};
+typedef struct casej casej;
 
     void remplitabballot (){
-        tabballot[0] = 'jaune';
-        tabballot[1] = 'jaune';
-        tabballot[2] = 'jaune';
-        tabballot[3] = 'violet';
-        tabballot[4] = 'violet';
-        tabballot[5] = 'violet';
-        tabballot[6] = 'violet';
-        tabballot[7] = 'bleu';
-        tabballot[8] = 'bleu';
-        tabballot[9] = 'bleu';
-        tabballot[10] = 'bleu';
-        tabballot[11] = 'bleu';
-        tabballot[12] = 'orange';
-        tabballot[13] = 'orange';
-        tabballot[14] = 'orange';
-        tabballot[15] = 'orange';
-        tabballot[16] = 'orange';
+
+        tabballot[0] = 2;
+        tabballot[1] = 2;
+        tabballot[2] = 2;
+        tabballot[3] = 1;
+        tabballot[4] = 1;
+        tabballot[5] = 1;
+        tabballot[6] = 1;
+        tabballot[7] = 0;
+        tabballot[8] = 0;
+        tabballot[9] = 0;
+        tabballot[10] = 0;
+        tabballot[11] = 0;
+        tabballot[12] = 3;
+        tabballot[13] = 3;
+        tabballot[14] = 3;
+        tabballot[15] = 3;
+        tabballot[16] = 3;
     }
+
+
 
     int tirage (){ // programme de tirage aléatoire
     int aleatoire = 0;
@@ -89,6 +98,8 @@ int main() {
     return(aleatoire);
     }
 
+
+
     int isvalid(int F){ // programme qui vérifie si le nombre aléatoire n'est pas déjà sorti
         int i;
         int o =0;
@@ -100,16 +111,39 @@ int main() {
             }
     }
 
+
+
     void inittabverif() { //programme pour initialiser le tableau de verification
     for(int i=0;i<9;i++){
         tabverif[i] =0;
     }
     }
 
+
     void inittabballot() { //programme pour initialiser le tableau des ballots
     for(int i=0;i<17;i++){
         tabballot[i] = ' ' ;
     }
+    }
+
+    void initville () {
+        for (int i=0;i<3;i++){
+            for(int j=0;j<4;j++){
+                demville[i][j] = 0;
+            }
+
+
+        }
+    }
+
+    void initvente () {
+        for (int i=0;i<12;i++){
+            for(int j=0;j<3;j++){
+                vente[i][j] = 0;
+            }
+
+
+        }
     }
 
     void triage (){
@@ -135,8 +169,9 @@ int main() {
                 }
             }
         }
+
         int tabtri[4] = {nbj,nbb,nbo,nbv};
-        char tabtricoul[4] = {'jaune','bleu','oange','violet'};
+        int tabtricoul[4] = {2,0,3,1};
         for(int j=0;j<4;j++){
             printf("\n%d",tabtri[j]);
         }
@@ -144,13 +179,13 @@ int main() {
         for(int j=0;j<4;j++){
             printf("\n%d",tabtri[j]);
         }
-
+        range_commerce(tabtri, tabtricoul);
     }
 
 void tri_a_bulle(int*t, int *t2){
     int j =0;
     int tmp =0;
-    char trans;
+    int trans;
     int en_desordre =1;
     while (en_desordre == 1){
         en_desordre = 0;
@@ -168,60 +203,60 @@ void tri_a_bulle(int*t, int *t2){
     }
 }
 
-void range_commerce (int*t,char*tt){
+void range_commerce (int*t,int*tt){
     //couleur la plus présente
     if (t[0] == t[1]){
         for (int i =0;i<t[0];i++){
-            vente1[i] = tt[0];
-            vente1[i+t[0]] = tt[1];
+            vente[i][0] = tt[0];
+            vente[i+t[0]][0] = tt[1];
         }
     }
 
     else {
         for (int j =0;j<t[0];j++){
-            vente1[j] = tt[0];
+            vente[j][0] = tt[0];
         }
     }
     //2eme couleur la plus présente
     if (t[1] == t[2]){
         for (int k =0;k<t[1];k++){
-            vente2[k] = tt[1];
-            vente2[k+t[1]] = tt[2];
+            vente[k][1] = tt[1];
+            vente[k+t[1]][1] = tt[2];
         }
     }
 
     else {
         if (t[1] == t[2] == t[3]){
             for (int l =0;l<t[1];l++){
-                vente2[l] = tt[1];
-                vente2[l+t[1]] = tt[2];
-                vente2[l+t[1]+t[1]] = tt[3];
+                vente[l][1] = tt[1];
+                vente[l+t[1]][1] = tt[2];
+                vente[l+t[1]+t[1]][1] = tt[3];
             }
         }
         else {
             for (int m =0;m<t[1];m++){
-                vente2[m] = tt[1];
+                vente[m][1] = tt[1];
             }
         }
     }
     //3eme couleur laplus présente
     if (t[2] == t[3]){
         for (int n =0;n<t[2];n++){
-            vente3[n] = tt[2];
-            vente3[n+t[2]] = tt[3];
+            vente[n][2] = tt[2];
+            vente[n+t[2]][2] = tt[3];
         }
     }
     else {
          for (int o =0;o<t[2];o++){
-            vente3[o] = tt[3];
+            vente[o][2] = tt[3];
          }
     }
 }
 
-void tribullealeat(char *t, char *t2){
+void tribullealeat(int *t, int *t2){
     int j;
-    char tmp;
-    char trans;
+    int tmp;
+    int trans;
         for (int n =0; n < 3; n++){
             j = n + rand()%(8-n);
             tmp = t[n];
@@ -232,34 +267,279 @@ void tribullealeat(char *t, char *t2){
             t2[j] = trans;
         }
     }
-/*
-void mep_jet_compt_et_pal{
-    tabaff[1] = tabcompt[0];
+
+void vente_ville (S_jou joueur){
+    int x,y,z;
+    printf("Dans quelle ville êtes vous ?");
+    scanf("%d",x);
+        printf("Il y a \nVente 1 : %d\nVente 2 : %d\nVente 3 : %d",demville[0][x-1],demville[1][x-1],demville[2][x-1]);
+        printf("Quel ballot voulez vous vendre ?");
+        scanf("%d",y);
+        while (atilleballot(demville[y-1][x-1]) != 1 ){
+            printf("vous n'avez pas le ballot\nEntrez le ballot que vous voulez vendre");
+            scanf("%d",y);
+        }
+        if (y == 1){
+            printf("vendu + 4roupies");
+            ballotspecial(demville[y-1][x-1]);
+            joueur.roupie + 4;
+            z = demville[0][x-1];
+            demville[0][x-1] = demville[1][x-1];
+            demville[1][x-1] = demville[2][x-1];
+            demville[2][x-1] = z;
+        }
+        else {
+            if (y == 2){
+                printf("Vendu + 3 roupies");
+                ballotspecial(demville[y-1][x-1]);
+                joueur.roupie + 3;
+                z = demville[1][x-1];
+                demville[1][x-1] = demville[2][x-1];
+                demville[2][x-1] = z;
+            }
+            else {
+                printf("Vendu + 1 roupie + 1jeton cliente");
+                ballotspecial(demville[y-1][x-1]);
+                joueur.roupie + 1;
+                joueur.jetclient++;
+            }
+        }
 }
 
-
-void achat_ville (int ville){
-    if (ville == 1){
-        printf("quel ballot souhaitez vous vendre ?\n");
-        for(int i = 1;i<4;i++){
-            printf("%d. %c",i,demvi1[i-1]);
-        }
-        int vente;
-        scanf("%d",vente);
-        atilleballot(demvi1[vente-1]);
+void ballotspecial (int x,S_jou joueur){
+    if (x == 2){
+        printf("Ballot jaune roupie + 1");
+        joueur.roupie++;
+    }
+    if (x == 1){
+        printf("Ballot violet jeton cliente + 1");
+        joueur.jetclient++;
     }
 }
 
 
-void atilleballot (char* ve,){
-    if (ve ==  )
+void atilleballot (int x,S_jou joueur){
+    if (x == joueur.ballot[0] || x == joueur.ballot[1]){
+        return 1;
+    }
+    return 0;
 }
 
-void demvil (){
+
+
+void inittabdest ()  {
+    for (int i=0;i<24;i++){
+        for (int j=0;j<8;j++){
+            tabdest[i][j] = 0;
+        }
+    }
+}
+
+
+void remplitabdest (){
+    // colonne 0 = case présente
+    // autres colonnes = la ou on peut aller
+    tabdest[0][0] = 1;
+    tabdest[0][1] = 2;
+    tabdest[0][1] = 3;
+
+    tabdest[1][0] = 2;
+    tabdest[1][1] = 1;
+    tabdest[1][2] = 3;
+    tabdest[1][3] = 5;
+
+    tabdest[2][0] = 3;
+    tabdest[2][1] = 1;
+    tabdest[2][2] = 2;
+    tabdest[2][3] = 6;
+
+    tabdest[3][0] = 4;
+    tabdest[3][1] = 7;
+
+    tabdest[4][0] = 5;
+    tabdest[4][1] = 2;
+    tabdest[4][2] = 10;
+
+    tabdest[5][0] = 6;
+    tabdest[5][1] = 3;
+    tabdest[5][2] = 11;
+
+    tabdest[6][0] = 7;
+    tabdest[6][1] = 4;
+    tabdest[6][2] = 12;
+
+    tabdest[7][0] = 8;
+    tabdest[7][1] = 9;
+    tabdest[7][2] = 13;
+
+    tabdest[8][0] = 9;
+    tabdest[8][1] = 8;
+
+    tabdest[9][0] = 10;
+    tabdest[9][1] = 5;
+    tabdest[9][2] = 11;
+    tabdest[9][3] = 20;
+
+    tabdest[10][0] = 11;
+    tabdest[10][1] = 6;
+    tabdest[10][2] = 10;
+    tabdest[10][3] = 20;
+    tabdest[10][4] = 16;
+    tabdest[10][5] = 12;
+
+    tabdest[11][0] = 12;
+    tabdest[11][1] = 11;
+    tabdest[11][2] = 16;
+    tabdest[11][3] = 13;
+    tabdest[11][4] = 7;
+
+    tabdest[12][0] = 13;
+    tabdest[12][1] = 12;
+    tabdest[12][2] = 16;
+    tabdest[12][3] = 8;
+    tabdest[12][4] = 14;
+    tabdest[12][5] = 17;
+
+    tabdest[13][0] = 14;
+    tabdest[13][1] = 13;
+    tabdest[13][2] = 17;
+    tabdest[13][3] = 18;
+    tabdest[13][4] = 15;
+
+    tabdest[14][0] = 15;
+    tabdest[14][1] = 14;
+    tabdest[14][2] = 18;
+    tabdest[14][3] = 19;
+
+    tabdest[15][0] = 16;
+    tabdest[15][1] = 11;
+    tabdest[15][2] = 20;
+    tabdest[15][3] = 21;
+    tabdest[15][4] = 22;
+    tabdest[15][5] = 17;
+    tabdest[15][6] = 13;
+    tabdest[15][7] = 12;
+
+    tabdest[16][0] = 17;
+    tabdest[16][1] = 16;
+    tabdest[16][2] = 22;
+    tabdest[16][3] = 13;
+    tabdest[16][4] = 23;
+    tabdest[16][5] = 18;
+    tabdest[16][6] = 14;
+
+    tabdest[17][0] = 18;
+    tabdest[17][1] = 14;
+    tabdest[17][2] = 17;
+    tabdest[17][3] = 23;
+    tabdest[17][4] = 24;
+    tabdest[17][5] = 19;
+    tabdest[17][6] = 15;
+
+    tabdest[18][0] = 19;
+    tabdest[18][1] = 15;
+    tabdest[18][2] = 18;
+    tabdest[18][3] = 24;
+
+    tabdest[19][0] = 20;
+    tabdest[19][1] = 10;
+    tabdest[19][2] = 11;
+    tabdest[19][3] = 16;
+    tabdest[19][4] = 21;
+
+    tabdest[20][0] = 21;
+    tabdest[20][1] = 20;
+    tabdest[20][2] = 16;
+    tabdest[20][3] = 22;
+
+    tabdest[21][0] = 22;
+    tabdest[21][1] = 21;
+    tabdest[21][2] = 16;
+    tabdest[21][3] = 17;
+
+    tabdest[22][0] = 23;
+    tabdest[22][1] = 17;
+    tabdest[22][2] = 18;
+    tabdest[22][3] = 24;
+
+    tabdest[23][0] = 24;
+    tabdest[23][1] = 23;
+    tabdest[23][2] = 18;
+    tabdest[23][3] = 19;
 
 }
 
-*/
+void achat_compt (S_jou joueur){
+    int x,y,nbact,nbroupie;
+    int i=0;
+    printf("Dans quel comptoir voulez vous acheter un ballot");
+    scanf("%d",x);
+    while (peutacheter(x,joueur) != 1){
+        printf("pas assez de point d'action et/ou roupies");
+        scanf("%d",x);
+    }
+    printf("Il y a les ballots :");
+    while (vente[i][x-1] != 0 || i<12){
+        i++;
+        printf("%d. ballot : %d",i,vente[i][x-1]);
+    }
+    printf("quel ballot voulez vous acheter ?");
+    scanf("%d",y);
+    //a finir
+    //sous programme d'achat avec prix de vente a rajouter.
+
+
+}
+
+int peutacheter (int x,S_jou joueur){
+    if (x == 1){
+        if (joueur.roupie<2 || joueur.nbaction<2){
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
+    if (x == 2){
+        if (joueur.roupie<1 || joueur.nbaction<2){
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
+    if (x == 3){
+        if (joueur.roupie<1 || joueur.nbaction<1){
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
