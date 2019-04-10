@@ -10,7 +10,7 @@ int main ()
 printf ("\n     +----------------------------------------------------------------carte de jeu------------------------------------------------------------------+");
 printf ("\n     |                                                                                                                                              |");
 printf ("\n     |                ++++++01++++++                     ++++++04++++++         ++++++09++++++                                                      |");
-printf ("\n     |                +10 joueur(s)+                     +10 joueur(s)+         +10 joueur(s)+                                                      |");
+printf ("\n     |                +%d joueur(s)+                     +%d joueur(s)+         +%d joueur(s)+                                                      |"/*, nbjoueurscase01, nbjoueurscase04, nbjoueurscase09*/);
 printf ("\n     |                +compt bleu  +                     +compt violet+         +compt vert  +                                                      |");
 printf ("\n     |                ++++++++++++++                     ++++++++++++++         ++++++++++++++                                                      |");
 printf ("\n     |                 /          \\                            |                      |                                                             |");
@@ -18,7 +18,7 @@ printf ("\n     |                /            \\                           |    
 printf ("\n     |               /              \\                          |                      |                                                             |");
 printf ("\n     |              /                \\                         |                      |                                                             |");
 printf ("\n     |      ++++++02++++++        ++++++03++++++         ++++++07++++++         ++++++08++++++                                                      |");
-printf ("\n     |      +10 joueur(s)+        +10 joueur(s)+         +10 joueur(s)+         +10 joueur(s)+                                                      |");
+printf ("\n     |      +%d joueur(s)+        +%d joueur(s)+         +%d joueur(s)+         +%d joueur(s)+                                                      |"/*, nbjoueurscase02, nbjoueurscase03, nbjoueurscase07, nbjoueurscase08*/);
 printf ("\n     |      +jeton piece +        +jeton ballot+         +ville verte +         +ville bleue +                                                      |");
 printf ("\n     |      ++++++++++++++        ++++++++++++++         ++++++++++++++         ++++++++++++++                                                      |");
 printf ("\n     |            |                     |                      |                     |                                                              |");
@@ -26,7 +26,7 @@ printf ("\n     |            |                     |                      |     
 printf ("\n     |            |                     |                      |                     |                                                              |");
 printf ("\n     |            |                     |                      |                     |                                                              |");
 printf ("\n     |      ++++++05++++++        ++++++06++++++         ++++++12++++++        ++++++13++++++        ++++++14++++++         ++++++15++++++          |");
-printf ("\n     |      +10 joueur(s)+        +10 joueur(s)+         +10 joueur(s)+________+10 joueur(s)+________+10 joueur(s)+_________+10 joueur(s)+          |");
+printf ("\n     |      +%d joueur(s)+        +%d joueur(s)+         +%d joueur(s)+________+%d joueur(s)+________+%d joueur(s)+_________+%d joueur(s)+          |"/*, nbjoueurscase05, nbjoueurscase06, nbjoueurscase12, nbjoueurscase13, nbjoueurscase14, nbjoueurscase15)*/;
 printf ("\n     |      +ville rouge +        +compt orange+         +case vide   +        +case vide   +        +compt orange+         +jeton client+          |");
 printf ("\n     |      ++++++++++++++        ++++++++++++++         ++++++++++++++        ++++++++++++++        ++++++++++++++         ++++++++++++++          |");
 printf ("\n     |            |                     |                /     |               /     |               /     |                      |                 |");
@@ -40,7 +40,7 @@ printf ("\n     |            |                     |         /            |     
 printf ("\n     |            |                     |        /             |       /             |       /             |                      |                 |");
 printf ("\n     |            |                     |       /              |      /              |      /              |                      |                 |");
 printf ("\n     |      ++++++10++++++        ++++++11++++++         ++++++16++++++        ++++++17++++++        ++++++18++++++         ++++++19++++++          |");
-printf ("\n     |      +10 joueur(s)+________+10 joueur(s)+_________+10 joueur(s)+________+10 joueur(s)+________+10 joueur(s)+_________+10 joueur(s)+          |");
+printf ("\n     |      +%d joueur(s)+________+%d joueur(s)+_________+%d joueur(s)+________+%d joueur(s)+________+%d joueur(s)+_________+%d joueur(s)+          |"/*, nbjoueurscase10, nbjoueurscase11, nbjoueurscase16, nbjoueurscase17, nbjoueurscase18*/);
 printf ("\n     |      +jeton piece +        +jeton client+         +colline     +        +jeton client+        +colline     +         +ville grise +          |");
 printf ("\n     |      ++++++++++++++        ++++++++++++++         ++++++++++++++        ++++++++++++++        ++++++++++++++         ++++++++++++++          |");
 printf ("\n     |                   \\               |              /      |       \\             |       \\             |                      |                 |");
@@ -53,7 +53,7 @@ printf ("\n     |                         \\         |        /            |    
 printf ("\n     |                          \\        |       /             |              \\      |              \\      |                      |                 |");
 printf ("\n     |                           \\       |      /              |               \\     |               \\     |                      |                 |");
 printf ("\n     |                            ++++++20++++++         ++++++21++++++        ++++++22++++++        ++++++23++++++        ++++++24++++++           |");
-printf ("\n     |                            +10 joueur(s)+_________+10 joueur(s)+________+10 joueur(s)+        +10 joueur(s)+________+10 joueur(s)+           |");
+printf ("\n     |                            +%d joueur(s)+_________+%d joueur(s)+________+%d joueur(s)+        +%d joueur(s)+________+%d joueur(s)+           |"/*, nbjoueurscase20, nbjoueurscase21, nbjoueurscase22, nbjoueurscase23, nbjoueurscase24*/);
 printf ("\n     |                            +compt vert  +         +jeton ville +        +compt bleu  +        +compt violet+        +jeton ballot+           |");
 printf ("\n     |                            ++++++++++++++         ++++++++++++++        ++++++++++++++        ++++++++++++++        ++++++++++++++           |");
 printf ("\n     |                                                                                                                                              |");
