@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include <math.h>
 #include "affichage.h"
 #include "main.h"
@@ -33,33 +34,12 @@ void affdemande_ville();
 
 
 
-
-int main() {
-    srand(time(NULL));//permet d'initier la fonction random
-    inittabverif();
-    for (int i=0;i<9;i++){
-        tirage();
-    }
-
-    triage();
-    printf("\n------------------------");
-    tribullealeat(tabcompt, tabpalais);
-    for (int j =0;j<8;j++){
-        printf("\n%d",tabcompt[j]);
-    }
-    tirage1 ();
-    affichage_carte();
-    affdemande_ville();
-    affcompt();
-}
-
-
 struct joueur {
-        char nom;
+        char *nom [15];
         int nbaction;
         int casejeu;
         int roupie;
-        int palais;
+        int palais [6];
         int jetville;
         int jetcomptoir;
         int jetclient;
@@ -68,14 +48,66 @@ struct joueur {
     };
 typedef struct joueur S_jou;
 
-struct casej {
-    int ville;
-    int palais;
-    char jetons [2];
-    char joueur;
+int main() {
+    //initialisation du jeu pour 4 joueurs
+    S_jou tab[4];
+    srand(time(NULL));//permet d'initier la fonction random
+    nbjoueur(tab,4);
+    inittabjeu();
+    initvente();
+    remplitabballot();
+    tribullealeat(tabcompt, tabpalais);
+    mise_en_place();
+    for(int i=0;i<4;i++){
+        manche(&tab);
+    }
+    affichage_carte();
+    affdemande_ville();
+    affcompt();
+}
+ void afaireachaquemanche (){
+    for (int i=0;i<9;i++){
+        tirage(tabballot);
+    }
+    triage(tabballot);
+    tirage1 ();
+ }
 
-};
-typedef struct casej casej;
+ void manche (S_jou tab[]){
+    afaireachaquemanche();
+    for (int k=0;k<4;k++){
+    for (int i=0;i<4;i++){
+        printf("Au joueur %d",i+1);
+        do {
+            tourjeu(&tab,i);
+        }
+        while(tab[i].nbaction !=0);
+    }
+    }
+ }
+void nbjoueur(S_jou tab[],int n){
+    char nom [15];
+    for(int i=0;i<n;i++){
+    printf("Nom du joueur %d\n",i);
+    gets(nom);
+    strcpy(tab[i].nom,nom);
+    tab[i].casejeu = 16;
+    tab[i].roupie = 2;
+    tab[i].jetclient = 0;
+    tab[i].jetville = 0;
+    tab[i].palais[0] = 0;
+    tab[i].palais[1] = 0;
+    tab[i].palais[2] = 0;
+    tab[i].palais[3] = 0;
+    tab[i].palais[4] = 0;
+    tab[i].palais[5] = 0;
+    tab[i].nbaction = 4;
+    tab[i].ballot[0] = 0;
+    tab[i].ballot[1] = 0;
+    }
+}
+
+
 
     void remplitabballot (){
 
@@ -99,8 +131,8 @@ typedef struct casej casej;
     }
 
 
-
-    int tirage (){ // programme de tirage aléatoire
+    int tirage (int *tab){ // programme de tirage aléatoire
+        /*
     int i;
     int k = 0;
     nbtirage ++;
@@ -109,11 +141,23 @@ typedef struct casej casej;
         }while(!isvalid(aleatoire));
     tabverif[nbtirage] = aleatoire;
     printf("%d\n", tabverif[nbtirage]);
-    return(aleatoire);
+    */
+    int i,nb2,nb;
+    nb = 17;
+    nb2 = nb;
+    for(i=0;i<nb;i++)
+    {
+        int tmp;
+        int index = rand()%nb2;
+        tmp = tab[index];
+        tab[index] = tab[nb2-1];
+        tab[nb-i-1] = tmp;
+        nb2--;
     }
+}
 
 
-
+/*
     int isvalid(int F){ // programme qui vérifie si le nombre aléatoire n'est pas déjà sorti
         int i;
         int o =0;
@@ -133,7 +177,7 @@ typedef struct casej casej;
     }
     }
 
-
+*/
     void inittabballot() { //programme pour initialiser le tableau des ballots
     for(int i=0;i<17;i++){
         tabballot[i] = ' ' ;
@@ -166,21 +210,21 @@ typedef struct casej casej;
         }
     }
 
-    void triage (){
+    void triage (int *tab1){
         int nbj =0;
         int nbb =0;
         int nbv =0;
         int nbo =0;
         for(int i =0;i<9;i++){
-            if(tabverif[i]<3){
+            if(tab1[i]==3){
                 nbj ++;
             }
             else {
-                if(tabverif[i]>=3 && tabverif[i]<7){
+                if(tab1[i]==2){
                     nbv++;
                 }
                 else {
-                    if(tabverif[i]>=7 && tabverif<12){
+                    if(tab1[i]==1){
                         nbb++;
                     }
                     else {
@@ -228,16 +272,24 @@ void tri_a_bulle(int*t, int *t2){
 
 void range_commerce (int *t,int *tt){
     //couleur la plus présente
-    if (t[0] == t[1]){
+    if (t[0] == t[1] == t[2]){
         for (int i =0;i<t[0];i++){
             vente[i][0] = tt[0];
             vente[i+t[0]][0] = tt[1];
+            vente[i+2*t[0]][0] = tt[2];
         }
     }
-
     else {
-        for (int j =0;j<t[0];j++){
-            vente[j][0] = tt[0];
+        if (t[0] == t[1]){
+            for (int i =0;i<t[0];i++){
+                vente[i][0] = tt[0];
+                vente[i+t[0]][0] = tt[1];
+            }
+        }
+        else {
+            for (int j =0;j<t[0];j++){
+                vente[j][0] = tt[0];
+            }
         }
     }
     //2eme couleur la plus présente
@@ -291,21 +343,31 @@ void tribullealeat(int *t, int *t2){
         }
     }
 
-void vente_ville (S_jou joueur){
+void vente_ville (S_jou tab[],int n){
     int x,y,z;
-    printf("Dans quelle ville êtes vous ?");
-    scanf("%d",x);
+    if (tab[n].casejeu == 5){
+        x == 1;
+    }
+    if (tab[n].casejeu == 7){
+        x == 2;
+    }
+    if (tab[n].casejeu == 8){
+        x == 3;
+    }
+    if (tab[n].casejeu == 19){
+        x == 4;
+    }
         printf("Il y a \nVente 1 : %d\nVente 2 : %d\nVente 3 : %d",demville[0][x-1],demville[1][x-1],demville[2][x-1]);
         printf("Quel ballot voulez vous vendre ?");
         scanf("%d",y);
-        while (atilleballot(demville[y-1][x-1]) != 1 ){
+        while (atilleballot(demville[y-1][x-1],tab) != 1 ){
             printf("vous n'avez pas le ballot\nEntrez le ballot que vous voulez vendre");
             scanf("%d",y);
         }
         if (y == 1){
             printf("vendu + 4roupies");
             ballotspecial(demville[y-1][x-1]);
-            joueur.roupie + 4;
+            tab[n].roupie + 4;
             z = demville[0][x-1];
             demville[0][x-1] = demville[1][x-1];
             demville[1][x-1] = demville[2][x-1];
@@ -315,7 +377,7 @@ void vente_ville (S_jou joueur){
             if (y == 2){
                 printf("Vendu + 3 roupies");
                 ballotspecial(demville[y-1][x-1]);
-                joueur.roupie + 3;
+                tab[n].roupie + 3;
                 z = demville[1][x-1];
                 demville[1][x-1] = demville[2][x-1];
                 demville[2][x-1] = z;
@@ -323,26 +385,26 @@ void vente_ville (S_jou joueur){
             else {
                 printf("Vendu + 1 roupie + 1jeton cliente");
                 ballotspecial(demville[y-1][x-1]);
-                joueur.roupie + 1;
-                joueur.jetclient++;
+                tab[n].roupie + 1;
+                tab[n].jetclient++;
             }
         }
 }
 
-void ballotspecial (int x,S_jou joueur){
+void ballotspecial (int x,S_jou tab[], int n){
     if (x == 2){
         printf("Ballot jaune roupie + 1");
-        joueur.roupie++;
+        tab[n].roupie++;
     }
     if (x == 1){
         printf("Ballot violet jeton cliente + 1");
-        joueur.jetclient++;
+        tab[n].jetclient++;
     }
 }
 
 
-void atilleballot (int x,S_jou joueur){
-    if (x == joueur.ballot[0] || x == joueur.ballot[1]){
+void atilleballot (int x,S_jou tab[], int n){
+    if (x == tab[n].ballot[0] || x == tab[n].ballot[1]){
         return 1;
     }
     return 0;
@@ -360,6 +422,11 @@ void inittabdest ()  {
 
 
 void remplitabdest (){
+    for(int i=0;i<23;i++){
+        for(int j=0;j<7;j++){
+            tabdest[i][j] = 0;
+        }
+    }
     // colonne 0 = case présente
     // autres colonnes = la ou on peut aller
     tabdest[0][0] = 1;
@@ -492,43 +559,217 @@ void remplitabdest (){
 
 }
 
-void achat_compt (S_jou joueur,int x){
-    int y,nbact,nbroupie;
-    int i=0;
-    while (peutacheter(x,joueur) != 1){
-        printf("pas assez de point d'action et/ou roupies");
-        //sous rog pour recommencer tour de jeu
+void oualler (S_jou tab[], int n){
+    int d, test;
+    test = 1;
+    printf("Vous etes à la case %d\n",tab[n].casejeu);
+    printf("Vous pouvez aller a la case %d\n",tabdest[tab[n].casejeu][0]);
+    int i =1;
+    do {
+        printf("Vous pouvez aller a la case %d\n",tabdest[tab[n].casejeu][i]);
+        i++;
     }
-    printf("Vous avez acheter un ballot");
-    if (joueur.ballot[0] == 0){
-        joueur.ballot[0] = x;
+    while (tabdest[tab[n].casejeu][i] != 0);
+
+
+    do {
+        printf("Ou voulez vous aller ?\n");
+        scanf("%d",d);
+        if (d == tabdest[tab[n].casejeu][0] ||d == tabdest[tab[n].casejeu][1]||d == tabdest[tab[n].casejeu][2]||d == tabdest[tab[n].casejeu][3]||d == tabdest[tab[n].casejeu][4]
+            ||d == tabdest[tab[n].casejeu][5]||d == tabdest[tab[n].casejeu][6]||d == tabdest[tab[n].casejeu][7]) {
+                tab[n].casejeu = d;
+                if(d == 16 || d == 18){
+                    tab[n].nbaction-2;
+                }
+                else {
+                    tab[n].nbaction-1;
+                }
+
+                printf("Vous êtes à la case %d\n",d);
+                for (int k=0;k<4;k++){
+                    for (int l=0;l<6;l++){
+                        if (tab[k].palais[l] == tab[n].casejeu){
+                            printf("Vous êtes passé par un palais +1 roupie au constructeur");
+                            tab[k].roupie++;
+                        }
+                    }
+                }
+            }
+        else {
+            printf("Vous ne pouvez pas aller la bas");
+        }
+        printf("Voules vous encore vous déplacer ?(1=oui,0=non)");
+        scanf("%d",test);
+    }
+    while (test == 1 || tab[n].nbaction !=0);
+}
+
+
+void tourjeu (S_jou tab[], int n){
+    int x;
+    if (tab[n].casejeu == 5 ||tab[n].casejeu == 7 ||tab[n].casejeu == 8 ||tab[n].casejeu == 19){
+        printf("Vous etes dans une ville voulez vous vendre ? (1 : oui, 2 : non)\n");
+        scanf("%d",x);
+        if (x == 1){
+            vente_ville(&tab,n);
+        }
+    }
+    if (tab[n].casejeu == 1 ||tab[n].casejeu == 6 ||tab[n].casejeu == 4 ||tab[n].casejeu == 9 ||
+        tab[n].casejeu == 14 ||tab[n].casejeu == 20 ||tab[n].casejeu == 22 ||tab[n].casejeu == 23){
+            printf("Vous etes dans une comptoir voulez vous acheter ? (1 : oui, 2 : non)\n");
+        scanf("%d",x);
+            if (x == 1){
+                achat_compt(&tab,n);
+            }
+        }
+    if(tab[n].casejeu == 2 ||tab[n].casejeu == 3 ||tab[n].casejeu == 10 ||tab[n].casejeu == 11 ||
+        tab[n].casejeu == 21 ||tab[n].casejeu == 17 ||tab[n].casejeu == 24 ||tab[n].casejeu == 15 ||tab[n].casejeu == 12 ||tab[n].casejeu == 13){
+            printf("Vous etes dans une case vide voulez vous construire un palais ? (1 : oui, 2 : non)\n");
+            scanf("%d",x);
+            if (x == 1){
+                construc_palais(&tab,n);
+            }
+        }
+    else {
+        printf("voulez vous vous deplacer ? (1=oui, 0=non)\n");
+        scanf("%d",x);
+        if (x == 1){
+            oualler(&tab,n);
+        }
+
+    }
+
+}
+
+int construc_palais (S_jou tab[], int n){
+    int x,y,c=0,test =0;
+    if(tabjeu[1][tab[n].casejeu] == 0){
+        printf("Il y a deja un palais\n");
+        return 0;
     }
     else {
-        if (joueur.ballot[1] == 0){
-            joueur.ballot[1] == x;
+        if (tab[n].nbaction<1 || tab[n].ballot[0] == 0 || tab[n].ballot[1] == 0){
+            printf("pas assez de roupies/ballot !\n");
+            return 0;
         }
         else {
-            printf("erreur plus de place !");
-            //sous prog pour reommencer tour de jeu
+            tab[n].nbaction-1;
+            printf("Quel ballot voulez vous utiliser pour construire ?");
+            printf("1. %d",tab[n].ballot[0]);
+            printf("2. %d",tab[n].ballot[1]);
+            scanf("%d",x);
+            if (x == 0){
+                printf("Ca ce n'est pas un ballot");
+            }
+            tab[n].ballot[x-1] = 0;
+            if (tabjeu[1][tab[n].casejeu] == 5){
+                tab[n].jetville++;
+            }
+            if (tabjeu[1][tab[n].casejeu] == 6){
+                tab[n].jetclient++;
+            }
+            if (tabjeu[1][tab[n].casejeu] == 7){
+                tab[n].roupie +2;
+            }
+            if (tabjeu[1][tab[n].casejeu] == 8){
+                printf("Vous avez gagné un ballot, lequel voulez vous");
+                for (int i=0;i<7;i++){
+                    printf("Il y a %d.  %d\n",i,vente[3][i]);
+                }
+                scanf("%d",y);
+                if(tab[n].ballot[0] == 0){
+                    tab[n].ballot[0] == vente[3][y];
+                }
+                if(tab[n].ballot[1] == 0){
+                    tab[n].ballot[1] == vente[3][y];
+                }
+            }
+            tabjeu[1][tab[n].casejeu] = 0;
+            do {
+                if (tab[n].palais[c] == 0){
+                    test =1;
+                    tab[n].palais[c] == tab[n].casejeu;
+                }
+                else {
+                    test =0;
+                }
+                c++;
+            }
+            while (test !=1);
         }
-    }
-    if (x == 1){
-        joueur.roupie -2;
-        joueur.nbaction -2;
-        }
-    if (x == 2){
-        joueur.roupie -2;
-        joueur.nbaction -1;
-    }
-    if (x == 3){
-        joueur.roupie -1;
-        joueur.nbaction -1;
     }
 }
 
-int peutacheter (int x,S_jou joueur){
+
+int achat_compt (S_jou tab[], int n){
+    int y,nbact,nbroupie;
+    int i=0,x=0,test=0;
+    do {
+        for(int a=0;a<12;a++){
+            if (vente[a][0] == tabjeu[1][tab[n].casejeu]){
+                test = 1;
+            }
+        }
+        for(int a=0;a<12;a++){
+            if (vente[a][1] == tabjeu[1][tab[n].casejeu]){
+                test = 2;
+            }
+        }
+        for(int a=0;a<12;a++){
+            if (vente[a][2] == tabjeu[1][tab[n].casejeu]){
+                test = 3;
+            }
+        }
+    }while(test == 0);
+
+    while (peutacheter(test,tab,n) != 1){
+        printf("pas assez de point d'action et/ou roupies");
+        return 0;
+    }
+    printf("Vous avez acheter un ballot");
+    if (tab[n].ballot[0] == 0){
+        tab[n].ballot[0] = tabjeu[1][tab[n].casejeu];
+        if (test == 1){
+        tab[n].roupie -2;
+        tab[n].nbaction -2;
+        }
+    if (test == 2){
+        tab[n].roupie -2;
+        tab[n].nbaction -1;
+    }
+    if (test == 3){
+        tab[n].roupie -1;
+        tab[n].nbaction -1;
+    }
+}
+    else {
+        if (tab[n].ballot[1] == 0){
+            tab[n].ballot[1] == tabjeu[1][tab[n].casejeu];
+            if (test == 1){
+        tab[n].roupie -2;
+        tab[n].nbaction -2;
+        }
+    if (test == 2){
+        tab[n].roupie -2;
+        tab[n].nbaction -1;
+    }
+    if (test == 3){
+        tab[n].roupie -1;
+        tab[n].nbaction -1;
+    }
+        else {
+            printf("erreur plus de place !");
+            return 0;
+            //sous prog pour reommencer tour de jeu
+        }
+    }
+}
+}
+
+
+int peutacheter (int x,S_jou tab[], int n){
     if (x == 1){
-        if (joueur.roupie<2 || joueur.nbaction<2){
+        if (tab[n].roupie<2 || tab[n].nbaction<2){
             return 0;
         }
         else {
@@ -536,7 +777,7 @@ int peutacheter (int x,S_jou joueur){
         }
     }
     if (x == 2){
-        if (joueur.roupie<1 || joueur.nbaction<2){
+        if (tab[n].roupie<1 || tab[n].nbaction<2){
             return 0;
         }
         else {
@@ -544,7 +785,7 @@ int peutacheter (int x,S_jou joueur){
         }
     }
     if (x == 3){
-        if (joueur.roupie<1 || joueur.nbaction<1){
+        if (tab[n].roupie<1 || tab[n].nbaction<1){
             return 0;
         }
         else {
@@ -563,14 +804,14 @@ void mise_en_place () {
     tabjeu[1][14] = tabcompt[6];
     tabjeu[1][23] = tabcompt[7];
 
-    tabjeu[1][2] = tabcompt[0];
-    tabjeu[1][3] = tabcompt[1];
-    tabjeu[1][10] = tabcompt[2];
-    tabjeu[1][11] = tabcompt[3];
-    tabjeu[1][21] = tabcompt[4];
-    tabjeu[1][17] = tabcompt[5];
-    tabjeu[1][24] = tabcompt[6];
-    tabjeu[1][15] = tabcompt[7];
+    tabjeu[1][2] = tabpalais[0];
+    tabjeu[1][3] = tabpalais[1];
+    tabjeu[1][10] = tabpalais[2];
+    tabjeu[1][11] = tabpalais[3];
+    tabjeu[1][21] = tabpalais[4];
+    tabjeu[1][17] = tabpalais[5];
+    tabjeu[1][24] = tabpalais[6];
+    tabjeu[1][15] = tabpalais[7];
 }
 
 void tirage1(){
@@ -614,24 +855,24 @@ void affichage_carte () {
 printf ("\n     +----------------------------------------------------------------carte de jeu------------------------------------------------------------------+");
 printf ("\n     |                                                                                                                                              |");
 printf ("\n     |                ++++++01++++++                     ++++++04++++++         ++++++09++++++                                                      |");
-printf ("\n     |                +%d joueur(s)+                     +%d joueur(s)+         +%d joueur(s)+                                                      |");
-printf ("\n     |                +compt bleu  +                     +compt violet+         +compt vert  +                                                      |");
+printf ("\n     |                +%d joueur(s) +                     +%d joueur(s) +         +%d joueur(s) +                                                      |",tabjeu[0][1],tabjeu[0][4],tabjeu[0][9]);
+printf ("\n     |                +compt -%d-   +                     +compt -%d-   +         +compt -%d-   +                                                      |",tabjeu[1][1],tabjeu[1][4],tabjeu[1][9]);
 printf ("\n     |                ++++++++++++++                     ++++++++++++++         ++++++++++++++                                                      |");
 printf ("\n     |                 /          \\                            |                      |                                                             |");
 printf ("\n     |                /            \\                           |                      |                                                             |");
 printf ("\n     |               /              \\                          |                      |                                                             |");
 printf ("\n     |              /                \\                         |                      |                                                             |");
 printf ("\n     |      ++++++02++++++        ++++++03++++++         ++++++07++++++         ++++++08++++++                                                      |");
-printf ("\n     |      +%d joueur(s)+        +%d joueur(s)+         +%d joueur(s)+         +%d joueur(s)+                                                      |");
-printf ("\n     |      +jeton piece +        +jeton ballot+         +ville verte +         +ville bleue +                                                      |");
+printf ("\n     |      +%d joueur(s) +        +%d joueur(s) +         +%d joueur(s) +         +%d joueur(s) +                                                      |",tabjeu[0][2],tabjeu[0][3]);
+printf ("\n     |      +jeton -%d-   +        +jeton -%d-   +         +ville verte +         +ville bleue +                                                      |",tabjeu[1][2],tabjeu[1][3]);
 printf ("\n     |      ++++++++++++++        ++++++++++++++         ++++++++++++++         ++++++++++++++                                                      |");
 printf ("\n     |            |                     |                      |                     |                                                              |");
 printf ("\n     |            |                     |                      |                     |                                                              |");
 printf ("\n     |            |                     |                      |                     |                                                              |");
 printf ("\n     |            |                     |                      |                     |                                                              |");
 printf ("\n     |      ++++++05++++++        ++++++06++++++         ++++++12++++++        ++++++13++++++        ++++++14++++++         ++++++15++++++          |");
-printf ("\n     |      +%d joueur(s)+        +%d joueur(s)+         +%d joueur(s)+________+%d joueur(s)+________+%d joueur(s)+_________+%d joueur(s)+          |");
-printf ("\n     |      +ville rouge +        +compt orange+         +case vide   +        +case vide   +        +compt orange+         +jeton client+          |");
+printf ("\n     |      +%d joueur(s) +        +%d joueur(s)+          +%d joueur(s) +        +%d joueur(s) +        +%d joueur(s)+          +%d joueur(s)+           |",tabjeu[0][6],tabjeu[0][14],tabjeu[0][15]);
+printf ("\n     |      +ville rouge +        +compt -%d-   +         +case vide   +        +case vide   +        +compt -%d-   +         +jeton -%d-   +          |",tabjeu[1][6],tabjeu[1][14],tabjeu[1][15]);
 printf ("\n     |      ++++++++++++++        ++++++++++++++         ++++++++++++++        ++++++++++++++        ++++++++++++++         ++++++++++++++          |");
 printf ("\n     |            |                     |                /     |               /     |               /     |                      |                 |");
 printf ("\n     |            |                     |               /      |              /      |              /      |                      |                 |");
@@ -644,8 +885,8 @@ printf ("\n     |            |                     |         /            |     
 printf ("\n     |            |                     |        /             |       /             |       /             |                      |                 |");
 printf ("\n     |            |                     |       /              |      /              |      /              |                      |                 |");
 printf ("\n     |      ++++++10++++++        ++++++11++++++         ++++++16++++++        ++++++17++++++        ++++++18++++++         ++++++19++++++          |");
-printf ("\n     |      +%d joueur(s)+________+%d joueur(s)+_________+%d joueur(s)+________+%d joueur(s)+________+%d joueur(s)+_________+%d joueur(s)+          |");
-printf ("\n     |      +jeton piece +        +jeton client+         +colline     +        +jeton client+        +colline     +         +ville grise +          |");
+printf ("\n     |      +%d joueur(s) +        +%d joueur(s) +         +%d joueur(s) +        +%d joueur(s)+         +%d joueur(s) +         +%d joueur(s) +          |",tabjeu[0][10],tabjeu[0][11],tabjeu[0][17]);
+printf ("\n     |      +jeton -%d-   +        +jeton -%d-   +         +colline     +        +jeton -%d-   +        +colline     +         +ville grise +          |",tabjeu[1][10],tabjeu[1][11],tabjeu[1][17]);
 printf ("\n     |      ++++++++++++++        ++++++++++++++         ++++++++++++++        ++++++++++++++        ++++++++++++++         ++++++++++++++          |");
 printf ("\n     |                   \\               |              /      |       \\             |       \\             |                      |                 |");
 printf ("\n     |                    \\              |             /       |        \\            |        \\            |                      |                 |");
@@ -657,8 +898,8 @@ printf ("\n     |                         \\         |        /            |    
 printf ("\n     |                          \\        |       /             |              \\      |              \\      |                      |                 |");
 printf ("\n     |                           \\       |      /              |               \\     |               \\     |                      |                 |");
 printf ("\n     |                            ++++++20++++++         ++++++21++++++        ++++++22++++++        ++++++23++++++        ++++++24++++++           |");
-printf ("\n     |                            +%d joueur(s)+_________+%d joueur(s)+________+%d joueur(s)+        +%d joueur(s)+________+%d joueur(s)+           |");
-printf ("\n     |                            +compt vert  +         +jeton ville +        +compt bleu  +        +compt violet+        +jeton ballot+           |");
+printf ("\n     |                            +%d joueur(s) +         +%d joueur(s) +        +%d joueur(s) +        +%d joueur(s) +        +%d joueur(s) +           |",tabjeu[0][20],tabjeu[0][21],tabjeu[0][22],tabjeu[0][23],tabjeu[0][24]);
+printf ("\n     |                            +compt -%d-   +         +jeton -%d-   +        +compt -%d-   +        +compt -%d-   +        +jeton -%d-   +           |",tabjeu[1][20],tabjeu[1][21],tabjeu[1][22],tabjeu[1][23],tabjeu[1][24]);
 printf ("\n     |                            ++++++++++++++         ++++++++++++++        ++++++++++++++        ++++++++++++++        ++++++++++++++           |");
 printf ("\n     |                                                                                                                                              |");
 printf ("\n     |                                                                                                                                              |");
@@ -666,7 +907,6 @@ printf ("\n     |                                                               
 printf ("\n     +--------------------------------------------------------------------Bombay--------------------------------------------------------------------+");
 printf ("\n\n\n\n");
 }
-
 
 void affdemande_ville (){
     printf("\n+---+---+---+---+");
